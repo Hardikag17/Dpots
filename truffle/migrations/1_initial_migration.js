@@ -1,5 +1,5 @@
-const smartContract = artifacts.require('dtech');
+const pots = artifacts.require('pots');
 
 module.exports = function (deployer) {
-  deployer.deploy(smartContract);
+  deployer.deploy(pots);
 };
