@@ -61,10 +61,10 @@ function Login() {
         Currently, it’s really a tedious task to send cryptocurrency to your
         friends and family. You will need their big wallet address. Also, let's
         say you want your family's total crypto assets or your total business
-        funds, your friends birthday fund in one place, So, that it can be used
+        funds, your friends birthday funds in one place, So, that it can be used
         by anyone among the authorized personnel whenever required, Doing this
         is not possible. Let’s make it flexible to share and manage all family,
-        friends, businesses funds in one place.
+        friends, businesses funds in one place by collecting them in pots.
       </div>
     </div>
   );
