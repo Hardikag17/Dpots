@@ -5,7 +5,7 @@ function Dashboard() {
     <div className='font-primary'>
       <Navbar />
       <div className=' flex flex-row h-full w-full p-5'>
-        <div className='w-1/5  bg-purple bg-opacity-30 m-3 border-0 rounded-xl p-2 shadow-purple shadow-lg'>
+        <div className='w-1/5  bg-purple bg-opacity-30 m-3 border-0 rounded-xl p-2 shadow-purple shadow-lg filter'>
           <h1 className=' text-web_large font-semibold text-center'>
             Requests
           </h1>
