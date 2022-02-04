@@ -27,7 +27,8 @@ class MyDocument extends Document {
             rel='stylesheet'
           />
         </Head>
-        <body>
+        <body
+          style={{ backgroundColor: '#0D0D0D', margin: '0%', padding: '0%' }}>
           <Main />
           <NextScript />
         </body>
