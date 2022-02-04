@@ -66,14 +66,15 @@ contract pots{
         require(strcmp(groups[id].name,name));
         groups[id].balance = groups[id].balance + msg.value;
         //add crypto to the pool
-        //address(pool).transfer(msg.value);
-
+        payable(pool).transfer(msg.value);
     }
 
     function takeCrypto(uint256 id, string memory name ) payable public verifiedUser(id){
         require(strcmp(groups[id].name,name));
+        require(groups[id].balance>=msg.value);
         groups[id].balance = groups[id].balance + msg.value;
         //take crypto from pool contract
+        payable(msg.sender).transfer(msg.value);
     }
 }
 
