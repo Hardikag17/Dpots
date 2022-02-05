@@ -55,10 +55,13 @@ contract pots{
     //add crypto
     uint256 i;
     modifier verifiedUser(uint256 pot_id) {
+        bool check = false;
         for(i=0;i<groups[pot_id].walletAddresses.length;i++){
             if(groups[pot_id].walletAddresses[i]==msg.sender){
+                check = true;
             }
         }
+        require(check);
         _;
     }
 

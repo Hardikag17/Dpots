@@ -63,7 +63,7 @@ function Dashboard() {
   );
 
   return (
-    <div className='font-primary'>
+    <div className='font-primary h-screen'>
       <Navbar />
       <div className=' flex flex-row h-full w-full p-5'>
         <div className='w-1/5  bg-purple bg-opacity-30 m-3 border-0 rounded-xl p-2 shadow-purple shadow-lg filter'>
@@ -73,8 +73,24 @@ function Dashboard() {
           <div>Friends</div>
           <div>Pots</div>
         </div>
-        <div className='w-3/5'>
-          <h1 className=' text-web_large font-semibold px-5'>Protfolio</h1>
+        <div className='w-3/5 h-full'>
+          <div className=' h-4/5 text-center mx-5 p-5'>
+            <h1 className=' text-web_large font-semibold px-5'>Protfolio</h1>
+            <div>
+              <h1>This address contains these crypto projects: </h1>
+            </div>
+          </div>
+          <div className='h-1/5 rounded-lg border-2 mx-5 p-5 m-auto text-center'>
+            <div>Total asset : x MATIC</div>
+            <div>
+              <button className='border mx-5 hover:scale-110 hover:bg-shade hover:brightness-125 border-lightblue rounded-lg p-3 text-blue font-bold text-2xl text-center'>
+                Pool
+              </button>
+              <button className='border inline-block  hover:scale-110 hover:bg-shade hover:brightness-125 border-lightblue rounded-lg p-3 text-blue font-bold text-2xl text-center'>
+                Take
+              </button>
+            </div>
+          </div>
         </div>
         <div className='w-1/5  bg-purple bg-opacity-30 m-3 border-0 rounded-xl p-2 shadow-purple shadow-lg'>
           <div className='text-center my-2'>
