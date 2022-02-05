@@ -6,7 +6,7 @@ import Dashboard from '../Components/Dashboard';
 
 const Home: NextPage = () => {
   const { isAuthenticated } = useMoralis();
-  return <div>{!isAuthenticated ? <Dashboard /> : <Login />}</div>;
+  return <div>{isAuthenticated ? <Dashboard /> : <Login />}</div>;
 };
 
 export default Home;

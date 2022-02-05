@@ -27,7 +27,7 @@ function Login() {
     // const user = new User();
     // user.set("username",username);
     // user.set("walletAddress",)
-    authenticate;
+    authenticate();
   }
 
   function newAccount() {}
