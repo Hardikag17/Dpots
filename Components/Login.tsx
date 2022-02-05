@@ -21,8 +21,12 @@ function Login() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState('');
   const { authenticate, authError } = useMoralis();
+  // const User = Moralis.Object.extend('User');
 
   function login() {
+    // const user = new User();
+    // user.set("username",username);
+    // user.set("walletAddress",)
     authenticate;
   }
 
@@ -88,7 +92,7 @@ function Login() {
                   setIsOpen(true);
                 }}>
                 {' '}
-                <h1> Don't have a accout, Register today!!</h1>
+                <h1> Don't have a account, Register today!!</h1>
               </button>
               <hr className='w-full h-1 bg-purple text-purple ' />
               <Modal

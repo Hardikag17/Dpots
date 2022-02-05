@@ -1,6 +1,67 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import Image from 'next/image';
+import Modal from 'react-modal';
+import { useState } from 'react';
+
 import Navbar from './Navbar';
+import Link from 'next/link';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    backgroundColor: '#0d0d0d',
+    fontFamily: 'Josefin Sans',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+library.add(fab);
 
 function Dashboard() {
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const ModalComponent = (
+    <div>
+      <Modal
+        isOpen={modalIsOpen}
+        style={customStyles}
+        onRequestClose={closeModal}
+        contentLabel='Registration Modal'>
+        <button className=' w-full text-right' onClick={closeModal}>
+          close
+        </button>
+
+        <div className='w-full h-full'>
+          <div>
+            <label className='px-2 py-1'>Enter name</label>
+            <input />
+            <br />
+            <label>Add friends</label>
+            <center>
+              <button className='border  hover:scale-110 hover:bg-shade hover:brightness-125 border-lightblue rounded-lg p-3 text-blue font-bold text-2xl text-center'>
+                Create
+              </button>
+            </center>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+
   return (
     <div className='font-primary'>
       <Navbar />
@@ -21,8 +82,27 @@ function Dashboard() {
               placeholder='Search'
               className=' w-11/12 mx-auto p-1'></input>
           </div>
-          <div>Friends</div>
-          <div>Pots</div>
+          <div>
+            <div className=' flex flex-row justify-between px-2'>
+              <div>Friends</div>
+            </div>
+            <div>Friends list</div>
+          </div>
+          <div>
+            <div className=' flex flex-row justify-between px-2'>
+              <div>Pots</div>
+              <div>
+                <button
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </button>
+                {ModalComponent}
+              </div>
+            </div>
+            <div>Pots list</div>
+          </div>
         </div>
       </div>
     </div>
