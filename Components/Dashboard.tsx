@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useMoralis, useMoralisQuery } from 'react-moralis';
 import Image from 'next/image';
 import Modal from 'react-modal';
 import { useState } from 'react';
@@ -24,6 +25,7 @@ const customStyles = {
 library.add(fab);
 
 function Dashboard() {
+  const { user } = useMoralis();
   const [modalIsOpen, setIsOpen] = useState(false);
 
   function openModal() {
@@ -75,7 +77,9 @@ function Dashboard() {
         </div>
         <div className='w-3/5 h-full'>
           <div className=' h-4/5 text-center mx-5 p-5'>
-            <h1 className=' text-web_large font-semibold px-5'>Protfolio</h1>
+            <h1 className=' text-web_large font-semibold px-5'>
+              Welcome {user.attributes.username}!!
+            </h1>
             <div>
               <h1>This address contains these crypto projects: </h1>
             </div>
