@@ -5,6 +5,7 @@ import {
   useMoralis,
   useWeb3ExecuteFunction,
   useMoralisQuery,
+  useMoralisCloudFunction,
   useNewMoralisObject,
 } from 'react-moralis';
 import Modal from 'react-modal';
@@ -35,6 +36,7 @@ function Dashboard() {
   const [newPotPerson, addNewPotPerson] = useState('');
   const [accountBalance, setBalance] = useState(0);
   const [walletAddresses, setWalletAddresses] = useState<any[]>([]);
+  const [usernames, setUsernames] = useState<any[]>([]);
   const uniqueID = uniqid();
 
   const { user, enableWeb3 } = useMoralis();
@@ -146,14 +148,20 @@ function Dashboard() {
     setIsOpen(false);
   }
 
-  const { data, error, isLoading } = useMoralisQuery('_Users');
+  const { data, error, isLoading } = useMoralisCloudFunction('People');
+
   function AddToGroup() {
-    // setWalletAddresses((walletAddresses) => [
-    //   ...walletAddresses,
-    //   data.attributes?.ethAddress,
-    // ]);
-    console.log('data:', data, error, isLoading);
-    //newPotPerson;
+    if (!isLoading && data) {
+      data.forEach((element: any) => {
+        if (element.attributes.username == newPotPerson) {
+          setWalletAddresses((walletAddresses) => [
+            ...walletAddresses,
+            element.attributes.ethAddress,
+          ]);
+          setUsernames((prev) => [...prev, element.attributes.username]);
+        }
+      });
+    }
   }
 
   const ModalComponent = (
@@ -173,6 +181,7 @@ function Dashboard() {
             <input
               value={name}
               required
+              placeholder='eg: Dave Birthday'
               className=' bg-black border-white border-2 m-1'
               onChange={(e) => {
                 setName(e.target.value);
@@ -193,7 +202,15 @@ function Dashboard() {
               className='border  hover:scale-110 hover:bg-shade hover:brightness-125 border-lightblue rounded-lg p-1  text-blue font-bold text-xl text-center'>
               Add
             </button>
-            <div>{walletAddresses}</div>
+            <div className='py-2 flex flex-row'>
+              {usernames.map((data, i) => {
+                return (
+                  <div className='bg-purple w-fit p-2 rounded-lg m-2' key={i}>
+                    {data}
+                  </div>
+                );
+              })}
+            </div>
             <center>
               <button
                 onClick={createPot}
