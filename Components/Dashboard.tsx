@@ -2,10 +2,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useMoralis, useMoralisQuery } from 'react-moralis';
+import {
+  useMoralis,
+  useMoralisQuery,
+  useNewMoralisObject,
+} from 'react-moralis';
 import Image from 'next/image';
 import Modal from 'react-modal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Web3 from 'web3';
 
 import Navbar from './Navbar';
 import Link from 'next/link';
@@ -27,6 +32,24 @@ library.add(fab);
 function Dashboard() {
   const { user } = useMoralis();
   const [modalIsOpen, setIsOpen] = useState(false);
+  const { data } = useMoralisQuery('_User', (query) => {
+    query.descending('username');
+  });
+  const [account, setAccount] = useState();
+
+  useEffect(() => {
+    async function load() {
+      const web3 = new Web3(Web3.givenProvider || 'http://localhost:3000');
+      const accounts = await web3.eth.requestAccounts();
+
+      setAccount(accounts[0]);
+      console.log(accounts[0]);
+    }
+
+    load();
+  }, []);
+
+  console.log(data);
 
   function openModal() {
     setIsOpen(true);
@@ -81,7 +104,7 @@ function Dashboard() {
               Welcome {user.attributes.username}!!
             </h1>
             <div>
-              <h1>This address contains these crypto projects: </h1>
+              <h1>This account contains these crypto projects: </h1>
             </div>
           </div>
           <div className='h-1/5 rounded-lg border-2 mx-5 p-5 m-auto text-center'>
