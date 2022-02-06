@@ -36,9 +36,9 @@ contract pots{
     }
 
     //new group
-    function newGroup(string memory name,address creater, address[] memory walletAddresses) public returns(uint256) {
+    function newGroup(string memory name,uint256 uniqueID,address creater, address[] memory walletAddresses) public returns(uint256) {
         group storage new_group = groups.push();
-        new_group.id = groups.length +1;
+        new_group.id = uniqueID;
         new_group.name = name;
         new_group.creater = creater;
         new_group.walletAddresses = walletAddresses;
@@ -65,19 +65,19 @@ contract pots{
         _;
     }
 
-    function addCrypto(uint256 id, string memory name ) payable public verifiedUser(id){
+    function addCrypto(uint256 id, string memory name, uint256 amount ) payable public verifiedUser(id){
         require(strcmp(groups[id].name,name));
-        groups[id].balance = groups[id].balance + msg.value;
+        groups[id].balance = groups[id].balance + amount;
         //add crypto to the pool
-        payable(pool).transfer(msg.value);
+        payable(pool).transfer(amount);
     }
 
-    function takeCrypto(uint256 id, string memory name ) payable public verifiedUser(id){
+    function takeCrypto(uint256 id, string memory name, uint256 amount ) payable public verifiedUser(id){
         require(strcmp(groups[id].name,name));
-        require(groups[id].balance>=msg.value);
-        groups[id].balance = groups[id].balance - msg.value;
+        require(groups[id].balance>=amount);
+        groups[id].balance = groups[id].balance - amount;
         //take crypto from pool contract
-        payable(msg.sender).transfer(msg.value);
+        payable(msg.sender).transfer(amount);
     }
 }
 

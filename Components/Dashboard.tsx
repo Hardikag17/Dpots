@@ -4,15 +4,16 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import {
   useMoralis,
   useWeb3ExecuteFunction,
-  useERC20Balances,
+  useMoralisQuery,
+  useNewMoralisObject,
 } from 'react-moralis';
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
+import uniqid from 'uniqid';
+import Web3 from 'web3';
 
 import Navbar from './Navbar';
 import RequestCard from './RequestCard';
-import uniqid from 'uniqid';
-import ERC20Balances from './ERC20Balance';
 
 const customStyles = {
   content: {
@@ -31,14 +32,35 @@ function Dashboard() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [amount, setAmount] = useState();
-  const [id, setId] = useState(uniqid());
-
-  //Moralis hooks
+  const [newPotPerson, addNewPotPerson] = useState('');
+  const [accountBalance, setBalance] = useState(0);
+  const [walletAddresses, setWalletAddresses] = useState<any[]>([]);
+  const uniqueID = uniqid();
 
   const { user, enableWeb3 } = useMoralis();
-  const { fetch, error, data } = useWeb3ExecuteFunction();
+  const { fetch } = useWeb3ExecuteFunction();
+  const { isSaving, save } = useNewMoralisObject('Groups');
 
-  const requests = [{ name: 'hardik' }];
+  const { Moralis } = useMoralis();
+  const web3 = new Web3(window.ethereum);
+
+  async function getBalance() {
+    try {
+      let balance = await web3.eth.getBalance(user?.attributes.ethAddress);
+      balance = web3.utils.fromWei(balance, 'milliether');
+      setBalance(parseInt(balance) / 1000);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getBalance();
+  });
+
+  const requests: { groupName: string; name: string }[] = [
+    { groupName: 'Charity', name: 'hardik' },
+  ];
 
   const newGroupOptions = {
     abi: [
@@ -62,9 +84,9 @@ function Dashboard() {
     functionName: 'newGroup',
     params: {
       name: name,
-      id: id,
+      id: uniqueID,
       creater: user?.get('ethAddress'),
-      walletAddresses: [user?.get('ethAddress')],
+      walletAddresses: walletAddresses,
     },
   };
 
@@ -85,11 +107,9 @@ function Dashboard() {
     contractAddress: '0x207Cde19b7E3472113C81131B7B7F818Df5e91b5',
     functionName: 'addCrypto',
     params: {
-      id: 2,
       name: name,
       amount: amount,
     },
-    msgValue: Moralis.Units.ETH(amount),
   };
 
   useEffect(() => {
@@ -107,6 +127,12 @@ function Dashboard() {
   function createPot() {
     let options = newGroupOptions;
     fetch({ params: options });
+    save({
+      GroupName: name,
+      user: user,
+      people: walletAddresses,
+      id: uniqueID,
+    });
   }
 
   function Pool() {
@@ -118,6 +144,16 @@ function Dashboard() {
 
   function closeModal() {
     setIsOpen(false);
+  }
+
+  const { data, error, isLoading } = useMoralisQuery('_Users');
+  function AddToGroup() {
+    // setWalletAddresses((walletAddresses) => [
+    //   ...walletAddresses,
+    //   data.attributes?.ethAddress,
+    // ]);
+    console.log('data:', data, error, isLoading);
+    //newPotPerson;
   }
 
   const ModalComponent = (
@@ -137,13 +173,27 @@ function Dashboard() {
             <input
               value={name}
               required
-              className=' bg-black'
+              className=' bg-black border-white border-2 m-1'
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
             <br />
-            <label>Add friends</label>
+            <label className='px-2 py-1'>Add friends</label>
+            <input
+              className=' bg-black border-white border-2 m-1'
+              placeholder='Type username'
+              value={newPotPerson}
+              onChange={(e) => {
+                addNewPotPerson(e.target.value);
+              }}
+            />
+            <button
+              onClick={AddToGroup}
+              className='border  hover:scale-110 hover:bg-shade hover:brightness-125 border-lightblue rounded-lg p-1  text-blue font-bold text-xl text-center'>
+              Add
+            </button>
+            <div>{walletAddresses}</div>
             <center>
               <button
                 onClick={createPot}
@@ -167,7 +217,7 @@ function Dashboard() {
           </h1>
           <div>
             {requests.map((data, i) => {
-              return <RequestCard key={i} props={data[i]} />;
+              return <RequestCard key={i} props={data} />;
             })}
           </div>
         </div>
@@ -180,7 +230,7 @@ function Dashboard() {
             <br />
             <br />
             <div className=' text-web_large'>
-              Your account balance : <ERC20Balances />
+              Your account balance : {accountBalance}
             </div>
             <div className=' text-web_large'>
               Total asset in this pot : x MATIC
@@ -209,17 +259,12 @@ function Dashboard() {
           </div>
         </div>
         <div className='lg:w-1/5 w-full  bg-purple bg-opacity-30 m-3 border-0 rounded-xl p-2 shadow-purple shadow-lg'>
-          <div className='text-center my-2'>
-            <input
-              placeholder='Search'
-              className=' w-11/12 mx-auto p-1'></input>
-          </div>
-          <div></div>
           <div>
             <div className=' flex flex-row justify-between px-2'>
-              <div>Pots</div>
+              <div className=' text-web_large font-semibold '>Pots</div>
               <div>
                 <button
+                  className='text-web_large font-semibold '
                   onClick={() => {
                     setIsOpen(true);
                   }}>
