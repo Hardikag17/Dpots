@@ -65,19 +65,19 @@ contract pots{
         _;
     }
 
-    function addCrypto(uint256 id, string memory name, uint256 amount ) payable public verifiedUser(id){
+    function addCrypto(uint256 id, string memory name ) payable public verifiedUser(id){
         require(strcmp(groups[id].name,name));
-        groups[id].balance = groups[id].balance + amount;
+        groups[id].balance = groups[id].balance + msg.value;
         //add crypto to the pool
-        payable(pool).transfer(amount);
+        payable(pool).transfer(msg.value);
     }
 
-    function takeCrypto(uint256 id, string memory name, uint256 amount ) payable public verifiedUser(id){
+    function takeCrypto(uint256 id, string memory name ) payable public verifiedUser(id){
         require(strcmp(groups[id].name,name));
-        require(groups[id].balance>=amount);
-        groups[id].balance = groups[id].balance - amount;
+        require(groups[id].balance>=msg.value);
+        groups[id].balance = groups[id].balance - msg.value;
         //take crypto from pool contract
-        payable(msg.sender).transfer(amount);
+        payable(msg.sender).transfer(msg.value);
     }
 }
 

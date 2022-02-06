@@ -26,15 +26,23 @@ function Login() {
 
   function login() {
     authenticate();
-    if (user?.attributes.state) {
+    if (
+      user?.attributes.state &&
+      user?.attributes.walletAddress == user.get('ethAddress')
+    ) {
       setState(1);
     } else {
+      setState(0);
       alert('No account found..Kindly register')!!;
     }
   }
 
   function newAccount() {
-    setUserData({ username: username, state: true });
+    setUserData({
+      username: username,
+      walletAddress: user.get('ethAddress'),
+      state: true,
+    });
     alert('You account is made!!');
   }
 
