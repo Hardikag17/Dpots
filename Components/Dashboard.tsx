@@ -1,13 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import {
-  useMoralis,
-  useWeb3ExecuteFunction,
-  useMoralisQuery,
-  useMoralisCloudFunction,
-  useNewMoralisObject,
-} from 'react-moralis';
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
 import uniqid from 'uniqid';
@@ -39,22 +32,7 @@ function Dashboard() {
   const [usernames, setUsernames] = useState<any[]>([]);
   const uniqueID = uniqid();
 
-  const { user, enableWeb3 } = useMoralis();
-  const { fetch } = useWeb3ExecuteFunction();
-  const { isSaving, save } = useNewMoralisObject('Groups');
-
-  const { Moralis } = useMoralis();
-  const web3 = new Web3(window.ethereum);
-
-  async function getBalance() {
-    try {
-      let balance = await web3.eth.getBalance(user?.attributes.ethAddress);
-      balance = web3.utils.fromWei(balance, 'milliether');
-      setBalance(parseInt(balance) / 1000);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  async function getBalance() {}
 
   useEffect(() => {
     getBalance();
@@ -64,83 +42,14 @@ function Dashboard() {
     { groupName: 'Charity', name: 'hardik' },
   ];
 
-  const newGroupOptions = {
-    abi: [
-      {
-        inputs: [
-          { internalType: 'string', name: 'name', type: 'string' },
-          { internalType: 'address', name: 'creater', type: 'address' },
-          {
-            internalType: 'address[]',
-            name: 'walletAddresses',
-            type: 'address[]',
-          },
-        ],
-        name: 'newGroup',
-        outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-        stateMutability: 'nonpayable',
-        type: 'function',
-      },
-    ],
-    contractAddress: '0x207Cde19b7E3472113C81131B7B7F818Df5e91b5',
-    functionName: 'newGroup',
-    params: {
-      name: name,
-      id: uniqueID,
-      creater: user?.get('ethAddress'),
-      walletAddresses: walletAddresses,
-    },
-  };
-
-  const addCryptoOptions = {
-    abi: [
-      {
-        inputs: [
-          { internalType: 'uint256', name: 'id', type: 'uint256' },
-          { internalType: 'string', name: 'name', type: 'string' },
-          { internalType: 'uint256', name: 'amount', type: 'uint256' },
-        ],
-        name: 'addCrypto',
-        outputs: [],
-        stateMutability: 'payable',
-        type: 'function',
-      },
-    ],
-    contractAddress: '0x207Cde19b7E3472113C81131B7B7F818Df5e91b5',
-    functionName: 'addCrypto',
-    params: {
-      name: name,
-      amount: amount,
-    },
-  };
-
   useEffect(() => {
-    async function load() {
-      try {
-        await enableWeb3();
-        console.log('user:', user);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    async function load() {}
     load();
   }, []);
 
-  function createPot() {
-    let options = newGroupOptions;
-    fetch({ params: options });
-    save({
-      GroupName: name,
-      user: user,
-      people: walletAddresses,
-      id: uniqueID,
-    });
-  }
+  function createPot() {}
 
-  function Pool() {
-    let options = addCryptoOptions;
-    fetch({ params: options });
-  }
+  function Pool() {}
 
   function Take() {}
 
@@ -148,21 +57,7 @@ function Dashboard() {
     setIsOpen(false);
   }
 
-  const { data, error, isLoading } = useMoralisCloudFunction('People');
-
-  function AddToGroup() {
-    if (!isLoading && data) {
-      data.forEach((element: any) => {
-        if (element.attributes.username == newPotPerson) {
-          setWalletAddresses((walletAddresses) => [
-            ...walletAddresses,
-            element.attributes.ethAddress,
-          ]);
-          setUsernames((prev) => [...prev, element.attributes.username]);
-        }
-      });
-    }
-  }
+  function AddToGroup() {}
 
   const ModalComponent = (
     <div>

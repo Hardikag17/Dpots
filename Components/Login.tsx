@@ -22,29 +22,10 @@ function Login() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [state, setState] = useState(0);
-  const { authenticate, authError, user, setUserData } = useMoralis();
 
-  function login() {
-    authenticate();
-    if (
-      user?.attributes.state &&
-      user?.attributes.walletAddress == user.get('ethAddress')
-    ) {
-      setState(1);
-    } else {
-      setState(0);
-      alert('No account found..Kindly register')!!;
-    }
-  }
+  function login() {}
 
-  function newAccount() {
-    setUserData({
-      username: username,
-      walletAddress: user.get('ethAddress'),
-      state: true,
-    });
-    alert('You account is made!!');
-  }
+  function newAccount() {}
 
   function openModal() {
     setIsOpen(true);
@@ -90,12 +71,6 @@ function Login() {
                 />
               </div>
               <div>
-                {authError && (
-                  <p>
-                    {authError.name}
-                    {authError.message}
-                  </p>
-                )}
                 <button
                   className='border hover:scale-110 hover:bg-shade hover:brightness-125 border-lightblue rounded-lg p-3 text-blue font-bold text-2xl text-center'
                   onClick={login}>
@@ -138,10 +113,7 @@ function Login() {
                       <div className=' p-5 cursor-pointer w-full text-center'>
                         <label>Connect to meatmask</label>
                         <br />
-                        <button
-                          onClick={() => {
-                            authenticate();
-                          }}>
+                        <button onClick={() => {}}>
                           <Image
                             src={metamask}
                             height={100}
